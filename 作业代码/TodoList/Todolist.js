@@ -6,21 +6,30 @@ import Todoing from './Todoing'
 export default class Todolist extends Component {
     constructor (){
         super();
-        this.state ={
-            todo:[],
-            todone:[],
-            dolength:0,
-            finishlength:0,
+        var doList = JSON.parse(localStorage.getItem("todo"));
+        var doneList = JSON.parse(localStorage.getItem("done"));
+        var dolength = 0;
+        var finishlength=0;
+        if(doList != null){
+             dolength = doList.length
         }
+        if(doneList != null){
+            finishlength = doneList.length
+       }
+        this.state ={
+            todo:doList || [],
+            todone:doneList || [],
+            dolength:dolength,
+            finishlength:doneList
+        }
+
     }
     componentDidMount(){
         var todo = [...this.state.todo];
         var todone = [...this.state.todone]
         this.setState({
-            
             dolength:todo.length,
-
-            finishlength:todone.length,
+            finishlength:todone.length
         })
     }
     //添加正在进行的数据
@@ -50,15 +59,19 @@ export default class Todolist extends Component {
         this.setState({
             todone:todone,
         },()=>{
-            localStorage.setItem('todo',JSON.stringify(todone));
+            localStorage.setItem('done',JSON.stringify(todone));
             this.componentDidMount();
         })
     }
     //todo变成todone,传过来了一个点击的序号
     goFinish =(idx) =>{
         var doing = [...this.state.todo];
+        console.log(JSON.parse(localStorage.getItem("todo")));
+        console.log(doing)
         var dotitle = doing[idx];
         var done = [...this.state.todone];
+        console.log(done);
+        console.log(localStorage.getItem("done"));
         doing.splice(idx,1);
         done.push(dotitle);
         this.setState({
